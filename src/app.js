@@ -68,8 +68,8 @@ const io = initializedsocket(server);
 //db connection logic
 dbConnect().then(()=>{
     console.log("Connected to db");
-    server.listen(process.env.PORT,()=>{
-        console.log("server is running on : ", process.env.PORT);
+    server.listen(process.env.PORT || 8008,()=>{
+        console.log("server is running on : ", process.env.PORT || 8008);
     }); 
 
 
