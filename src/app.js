@@ -13,7 +13,7 @@ const app=express();
 
 //global middlewares
 app.use(cors({
-    origin: '*', // allow requests from this origin
+    origin: 'http://localhost:3000', // allow requests from this origin
     credentials: true, // allow sending cookies over HTTP requests,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], // Include PATCH
   allowedHeaders: ['Content-Type', 'Authorization'], 

@@ -8,12 +8,12 @@ const dotenv=require('dotenv');
 const zoomRouter = express.Router();
 
 // Use the provided credentials directly (move to .env for production)
-const ZOOM_ACCOUNT_ID = `${process.env.ZOOM_ACCOUNT_ID}`;
-const ZOOM_API_BASE_URL = `${process.env.ZOOM_API_BASE_URL}`;
-const ZOOM_CLIENT_ID = `${process.env.ZOOM_CLIENT_ID}`;
-const ZOOM_CLIENT_SECRET = `${process.env.ZOOM_CLIENT_SECRET}`;
-const ZOOM_API_KEY = `${process.env.ZOOM_API_KEY}`; // Typically, API Key is the same as Client ID for JWT
-const ZOOM_API_SECRET = `${process.env.ZOOM_API_SECRET}`; // Typically, API Secret is the same as Client Secret for JWT
+const ZOOM_ACCOUNT_ID = `gwRchv0SQdC_2dbTAqrvLQ`;
+const ZOOM_API_BASE_URL = `https://api.zoom.us/v2`;
+const ZOOM_CLIENT_ID = `uvRu1mzQRoWR2pRU08oUQg`;
+const ZOOM_CLIENT_SECRET = `GDZFsS2o2tRrf6hedVt65gU2UPkHBZw3`;
+const ZOOM_API_KEY = `uvRu1mzQRoWR2pRU08oUQg`; // Typically, API Key is the same as Client ID for JWT
+const ZOOM_API_SECRET = `GDZFsS2o2tRrf6hedVt65gU2UPkHBZw3`; // Typically, API Secret is the same as Client Secret for JWT
 
 let accessToken = null;
 let tokenExpiration = null;

@@ -303,6 +303,69 @@ Proposalrouter.get("/api/freelancer/proposals", UserMw, async (req, res) => {
     res.status(500).json({ message: "Failed to fetch proposals" });
   }
 });
+Proposalrouter.get("/api/client/proposals", UserMw, async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).json({ message: "Unauthorized" });
+    if (user.role !== "client")
+      return res.status(403).json({ message: "Only freelancers allowed" });
+
+    const proposals = await Proposal.find({ freelancerId: user._id })
+      .populate({
+        path: "jobId",
+        select: "title description jobType createdBy createdAt budget category subCategory experienceLevel projectScope duration skills location languages screeningQuestions attachments",
+        populate: {
+          path: "createdBy",
+          select: "_id fullname avatar",
+        },
+      })
+      .sort({ submittedAt: -1 })
+      .lean();
+
+    const validProposals = proposals.filter((proposal) => {
+      if (!proposal.jobId) {
+        console.warn(`Proposal ${proposal._id} has an invalid jobId: ${proposal.jobId}`);
+        return false;
+      }
+      return true;
+    });
+
+    const formattedProposals = validProposals.map((proposal) => ({
+      _id: proposal?._id,
+      jobId: proposal?.jobId._id,
+      job: {
+        title: proposal?.jobId.title,
+        description: proposal?.jobId.description,
+        jobType: proposal?.jobId.jobType,
+        createdAt: proposal?.jobId.createdAt,
+        category: proposal?.jobId.category,
+        subCategory: proposal?.jobId.subCategory,
+        experienceLevel: proposal?.jobId.experienceLevel,
+        projectScope: proposal?.jobId.projectScope,
+        duration: proposal?.jobId.duration,
+        skills: proposal?.jobId.skills || [],
+        location: proposal?.jobId.location,
+        languages: proposal?.jobId.languages || [],
+        screeningQuestions: proposal?.jobId.screeningQuestions || [],
+        attachments: proposal?.jobId.attachments || [],
+        createdBy: proposal?.jobId.createdBy?._id,
+        createdByName: proposal?.jobId.createdBy?.fullname,
+        createdByAvatar: proposal?.jobId.createdBy?.avatar || "/api/placeholder/40/40",
+        budget: proposal?.jobId.budget,
+      },
+      bidAmount: proposal?.bidAmount,
+      status: proposal?.status,
+      submittedAt: proposal?.submittedAt,
+      proposalText: proposal?.proposalText,
+      attachments: proposal?.attachments || [],
+    }));
+
+    res.status(200).json(formattedProposals);
+  } catch (error) {
+    console.error("Error fetching freelancer proposals:", error);
+    res.status(500).json({ message: "Failed to fetch proposals" });
+  }
+});
 
 Proposalrouter.post('/api/client/proposals/:id/hire', async (req, res) => {
   try {
